@@ -1,16 +1,16 @@
 /* *******************************************************************
  * Copyright (c) 2021 Universidade Federal de Pernambuco (UFPE).
- * 
+ *
  * This file is part of the Compilers course at UFPE.
- * 
- * During the 1970s and 1980s, Hewlett-Packard used RPN in all 
- * of their desktop and hand-held calculators, and continued to 
- * use it in some models into the 2020s. In computer science, 
- * reverse Polish notation is used in stack-oriented programming languages 
+ *
+ * During the 1970s and 1980s, Hewlett-Packard used RPN in all
+ * of their desktop and hand-held calculators, and continued to
+ * use it in some models into the 2020s. In computer science,
+ * reverse Polish notation is used in stack-oriented programming languages
  * such as Forth, STOIC, PostScript, RPL and Joy.
- *  
- * Contributors: 
- *     Henrique Rebelo      initial design and implementation 
+ *
+ * Contributors:
+ *     Henrique Rebelo      initial design and implementation
  *     http://www.cin.ufpe.br/~hemr/
  * ******************************************************************/
 
@@ -27,6 +27,7 @@ public abstract class Expr {
 	public interface Visitor<T> {
 		T visitNumberExpr(Number expr);
 		T visitBinopExpr(Binop expr);
+		T visitIDExpr(ID expr);
 	}
 
 	// Nested Expr classes here
@@ -61,6 +62,18 @@ public abstract class Expr {
 		public final Expr left;
 		public final Expr right;
 		public final Token operator;
+	}
+
+	// ID expression
+	public static class ID extends Expr {
+		public ID(String value){
+			this.value = value;
+		}
+		@Override
+		public <T> T accept(Visitor<T> visitor) {
+			return visitor.visitIDExpr(this);
+		}
+		public final String value;
 	}
 
 	public abstract <T> T accept(Visitor<T> visitor);

@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 
 import postfix.ast.AstPrinter;
@@ -38,7 +39,7 @@ import postfix.parser.ParserError;
  */
 public class Postfix {
 
-	private static final Interpreter interpreter = new Interpreter();
+	private static final Interpreter interpreter = new Interpreter(new HashMap<String, String>());
 	private static boolean hasError = false;
 	private static boolean debugging = false;
 
@@ -50,6 +51,7 @@ public class Postfix {
 	 */
 	public static void main(String[] args) throws IOException {
 //		args = new String [1];
+
 //		args [0] = "../StackerPrograms/program/Calc1.stk";
 //		args [1] = "../StackerPrograms/program/Calc2.stk";
 
@@ -99,6 +101,10 @@ public class Postfix {
 	 */
 	private static void run(String source) {
 		try {
+			interpreter.env.put("x", "3");
+			interpreter.env.put("y", "15");
+			interpreter.env.put("w", "7");
+
 			Scanner scanner = new Scanner(source);
 			List<Token> tokens = scanner.scan();
 
@@ -118,11 +124,12 @@ public class Postfix {
 		} catch (LexError e) {
 			error("Lex", e.getMessage());
 			hasError = true;
-		}	
-		catch (ParserError e) {
-			error("Parser", e.getMessage());
+		}
+		catch (Error e) {
+			error("Interpreter", e.getMessage());
 			hasError = true;
-		}	
+		}
+
 	}
 
 	// -------------------------------------------------------------
